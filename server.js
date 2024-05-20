@@ -1,11 +1,13 @@
 import express from 'express';
+import cors from 'cors';
 import https from 'https';
 import fs from 'fs';
-import * as sql from './src/util/sql.js';
-import constants from './src/constants.js';
+import router from './src/routes/router.js';
 
 const app = express();
+app.disable('x-powered-by');
 const port = 3000;
+app.use(cors());
 
 // Read SSL certificate and key
 const sslOptions = {
@@ -19,17 +21,7 @@ app.get('/', (req, res) => {
   res.send(`Welcome to my server! Your IP is ${clientIp}`);
 });
 
-app.get('/all', async (req, res) => {
-  const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(`req received /all from client ${clientIp}`)
-  sql.executeQuery(constants.SQL.GET_ALL)
-  .then(results => {
-    res.status(200).send(results);
-  })
-  .catch(error => {
-    res.status(400).send(error.message);
-  });
-});
+app.use('/api', router);
 
 https.createServer(sslOptions, app).listen(port, () => {
   console.log(`HTTPS server is running on port ${port}`);
