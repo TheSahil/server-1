@@ -13,6 +13,18 @@ const getAllService = async () => {
     }
 }
 
+const getByNameService = async (name) => {
+    try {
+        let query = Constants.SQL.GET_BY_NAME;
+        let res = await sql.query(query, [name]);
+        return res[0];
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 export {
-    getAllService
+    getAllService,
+    getByNameService
 }

@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import {getAllService} from '../services/service.js';
+import {getAllService, getByNameService} from '../services/service.js';
 
 const getAllController = async (req, res, next) => {
     try {
@@ -10,6 +10,17 @@ const getAllController = async (req, res, next) => {
     }
 }
 
+const getByNameController = async (req, res, next) => {
+    try {
+        const name = req.params.name;
+        const data = await getByNameService(name);
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export {
-    getAllController
+    getAllController,
+    getByNameController
 }
